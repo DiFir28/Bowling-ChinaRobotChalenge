@@ -1,0 +1,29 @@
+Function between(in number ang1, in number ang2,out number theta)
+  theta = ang2-ang1
+  If theta > 3.1415 Then
+    theta-=6.283
+  ElseIf theta < -3.1415 Then
+    theta+=6.283
+  EndIf
+EndFunction
+
+Function atan2(in number dx, in number dy, out number ang)
+  If dx <>0 Then
+    ang = Math.ArcTan(dy/dx)
+    If dy=0 Then
+      If dx>=0 Then
+        ang = 0
+      Else
+        ang = 3.1415
+      EndIf
+    ElseIf dx<0 Then
+      ang=3.1415+ang
+    EndIf
+  Else
+    If dy>=0 Then
+      ang = 1.57
+    Else
+      ang = -1.57
+    EndIf
+  EndIf
+EndFunction

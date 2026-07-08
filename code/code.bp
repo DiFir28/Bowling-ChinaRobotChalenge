@@ -1,0 +1,106 @@
+folder "prjs""China"
+
+include "ImpMath"
+include "Odometry"
+import "PID"
+
+threads_flag=1
+
+PID.Init(3.2,0.2,0.003,15,pidB)
+PID.Init(3.2,0.2,0.003,15,pidC)
+
+coords_save=EV3File.OpenRead("Coords")
+coords=EV3File.ReadNumberArray(coords_save,3)
+prev_move_t=0
+B_pos=0
+C_pos=0
+
+Sub reset
+  MotorB.ResetCount()
+  MotorC.ResetCount()
+  encB_last=0
+  encC_last=0
+  B_pos=0
+  C_pos=0
+  PID.Reset(pidB,pidB)
+  PID.Reset(pidC,pidC)
+  Time.Reset1()
+  prev_move_t=Time.Get1()
+EndSub
+
+
+Function move(in number V, in number w) '[V]-cm/s [w]-rad/s
+  time=Time.Get1()
+  dt=time-@prev_move_t
+  V_part=V*37
+  w_part=w*289.5
+  @B_pos=@B_pos+(V_part-w_part)*dt/2000
+  PID.Calc(@pidB,@B_pos+MotorB.GetTacho(),time,@pidB, up)
+  MotorB.StartPower(-up)
+  @C_pos=@C_pos+(V_part+w_part)*dt/2000
+  PID.Calc(@pidC,@C_pos-MotorC.GetTacho(),time,@pidC, up)
+  MotorC.StartPower(up)
+  @prev_move_t=time
+EndFunction
+
+Function RotIn(in number ang)
+  bet=0
+  While "True"
+    between(@coords[2], ang,bet)
+    'move(0,bet*2)
+    If bet>0.02 Then
+      move(0,1.5)
+    ElseIf bet<-0.02 Then
+      move(0,-1.5)
+    Else
+      Goto endROT
+    EndIf
+    Program.Delay(2)
+  EndWhile
+  endROT:
+  MotorBC.OffAndBrake()
+EndFunction
+
+Function GoIn(in number x, in number y, in number ang)
+  atan2((x-@coords[0]), (y-@coords[1]),dir)
+  'between(@coords[2],dir,ddir)
+  LCD.Text(1,10,80,2,dir)
+ 
+  reset()
+  RotIn(dir)
+  Program.Delay(100)
+  len=Math.SquareRoot((x-@coords[0])*(x-@coords[0])+(y-@coords[1])*(y-@coords[1]))*18.5
+  reset()
+  While MotorC.GetTacho()<len
+    move(15,0)
+    Program.Delay(3)
+  EndWhile
+  MotorBC.OffAndBrake()
+ 
+  ''between(dir,ang,ddir)
+  reset()
+  RotIn(ang)
+EndFunction
+
+Sub Shoot
+  MotorAD.StartPower(-90)
+  Program.Delay(5000)
+  MotorAD.OffAndBrake()
+EndSub
+
+LCD.Clear()
+Thread.Run=LCDcoords
+Thread.Run=CALCcoords
+
+coords=Vector.Init(3,0)
+'RotOn(1.3)
+GoIn(10,40,1.3)
+'Program.Delay(8000)
+Shoot()
+GoIn(0,0,0)
+'MotorBC.OffAndBrake()
+'threads_flag=0
+'Program.Delay(2000)
+
+coords_save=EV3File.OpenWrite("Coords")
+EV3File.WriteNumberArray(coords_save,3,coords)

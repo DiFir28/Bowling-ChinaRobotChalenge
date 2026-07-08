@@ -1,0 +1,37 @@
+encB_last=0
+encC_last=0
+
+Function dirVelocity(out number V, out number w)
+  dB=0-MotorB.GetTacho()-@encB_last
+  dC=MotorC.GetTacho()-@encC_last
+  V=(dB+dC)/37      '*6.2*3.1415/720
+  w=(dC-dB)/289.5   '*6.2*3.1415/360/15
+  
+  @encB_last=0-MotorB.GetTacho()
+  @encC_last=MotorC.GetTacho()
+EndFunction
+
+threads_flag=1
+
+Sub CALCcoords '[V]-cm/s [w]-rad/s
+  While threads_flag=1
+    V=0
+    w=0
+    dirVelocity(V,w)
+    coords[2]=coords[2]+w/2
+    coords[0]=coords[0]+V*Math.Cos(coords[2])
+    coords[1]=coords[1]+V*Math.Sin(coords[2])
+    coords[2]=coords[2]+w/2
+    between(0,coords[2],coords[2])
+    Program.Delay(11)
+  EndWhile
+EndSub
+
+Sub LCDcoords
+  While threads_flag=1
+    LCD.Text(1,10,20,2,coords[0])
+    LCD.Text(1,10,40,2,coords[1])
+    LCD.Text(1,10,60,2,coords[2])
+    Program.Delay(100)
+  EndWhile
+EndSub

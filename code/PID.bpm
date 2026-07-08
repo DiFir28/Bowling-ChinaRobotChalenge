@@ -1,0 +1,38 @@
+'PID file
+'0-up
+'1-kp 2-kd 3-ki 4-I-overshoot
+'5-last-err 6-I 7-t
+
+Function Init(in number kp, in number kd, in number ki, in number I_over, out number[] pid)
+  pid=Vector.Init(7,0)
+  pid[1]=kp
+  pid[2]=kd
+  pid[3]=ki
+  pid[4]=I_over
+EndFunction
+
+Function Init(in number kp, in number kd, in number ki, out number[] pid)
+  Init(kp, kd, ki, 0, pid)
+EndFunction
+
+Function Calc(in number[] pid_in, in number err, in number time, out number[] pid, out number up)
+  pid=pid_in
+  dt=time-pid[7]
+  pid[7]=time
+  pid[6]=pid[6]+err*pid[3]*dt
+  If pid[6]>pid[4] Then   'I overshoot
+    pid[6]=pid[4]
+  ElseIf pid[6]<-pid[4] Then
+    pid[6]=-pid[4]
+  EndIf
+  pid[0]=err*pid[1]+(err-pid[5])*pid[2]*dt+pid[6]
+  up=pid[0]
+  pid[5]=err
+EndFunction
+
+Function Reset(in number[] pid_in, out number[] pid)
+  pid=pid_in
+  pid[5]=0
+  pid[6]=0
+
+EndFunction
