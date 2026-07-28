@@ -26,12 +26,14 @@ Sub CALCcoords '[V]-cm/s [w]-rad/s
     Program.Delay(11)
   EndWhile
 EndSub
-
+LCDbuf=Vector.Init(3,0)
 Sub LCDcoords
   While threads_flag=1
     LCD.Text(1,10,20,2,coords[0])
     LCD.Text(1,10,40,2,coords[1])
     LCD.Text(1,10,60,2,coords[2])
-    Program.Delay(100)
+    LCD.Text(1,10,80,2,LCDbuf[0])
+    LCD.Text(1,10,100,2,LCDbuf[1])
+    Program.Delay(81)
   EndWhile
 EndSub

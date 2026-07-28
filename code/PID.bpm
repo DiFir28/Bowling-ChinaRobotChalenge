@@ -34,5 +34,6 @@ Function Reset(in number[] pid_in, out number[] pid)
   pid=pid_in
   pid[5]=0
   pid[6]=0
+  pid[7]=0
 
 EndFunction

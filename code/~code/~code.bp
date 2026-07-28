@@ -1,39 +1,51 @@
-lv_kp_7 = 0
-lv_kd_7 = 0
-lv_ki_7 = 0
-lv_i_over_7 = 0
-lv_pid_7 [ 0 ] = 0
-lv_x_6 = 0
-lv_y_6 = 0
-lv_ang_6 = 0
-lv_v_3 = 0
-lv_w_3 = 0
+lv_kp_10 = 0
+lv_kd_10 = 0
+lv_ki_10 = 0
+lv_i_over_10 = 0
+lv_pid_10 [ 0 ] = 0
+lv_x_9 = 0
+lv_y_9 = 0
+lv_ang_9 = 0
+lv_v_5 = 0
+lv_w_5 = 0
 lv_ang1_1 = 0
 lv_ang2_1 = 0
 lv_theta_1 = 0
-lv_pid_in_8 [ 0 ] = 0
-lv_pid_8 [ 0 ] = 0
-lv_pid_in_9 [ 0 ] = 0
-lv_err_9 = 0
-lv_time_9 = 0
-lv_pid_9 [ 0 ] = 0
-lv_up_9 = 0
-lv_v_4 = 0
-lv_w_4 = 0
+lv_pid_in_11 [ 0 ] = 0
+lv_pid_11 [ 0 ] = 0
+lv_pid_in_12 [ 0 ] = 0
+lv_err_12 = 0
+lv_time_12 = 0
+lv_pid_12 [ 0 ] = 0
+lv_up_12 = 0
+lv_v_6 = 0
+lv_w_6 = 0
 lv_dx_2 = 0
 lv_dy_2 = 0
 lv_ang_2 = 0
-lv_ang_5 = 0
+lv_ang_7 = 0
+lv_a_3 [ 0 ] = 0
+lv_b_3 [ 0 ] = 0
+lv_ro_3 = 0
+lv_a_4 [ 0 ] = 0
+lv_theta_4 = 0
+lv_ra_4 [ 0 ] = 0
 gv_pidb [ 0 ] = 0
 gv_pidc [ 0 ] = 0
+gv_pointfollowing [ 0 ] = 0
 gv_v = 0
 gv_w = 0
-lv_up_4 = 0
-lv_bet_5 = 0
-lv_dir_6 = 0
+lv_up_6 = 0
+lv_bet_7 = 0
+lv_dir_8 = 0
+lv_dir_9 = 0
+lv_r_9 = 0
+lv_rottrg_9 [ 0 ] = 0
+lv_w_9 = 0
 gv_encb_last = 0
 gv_encc_last = 0
 gv_threads_flag = 0
+gv_lcdbuf [ 0 ] = 0
 gv_coords_save = 0
 gv_coords [ 0 ] = 0
 gv_prev_move_t = 0
@@ -42,19 +54,26 @@ gv_c_pos = 0
 gv_encb_last = 0
 gv_encc_last = 0
 gv_threads_flag = 1
+gv_lcdbuf = Vector.Init ( 3 , 0 )
 gv_threads_flag = 1
-lv_kp_7 = 3.2
-lv_kd_7 = 0.2
-lv_ki_7 = 0.003
-lv_i_over_7 = 15
+lv_kp_10 = 3.1
+lv_kd_10 = 0.1
+lv_ki_10 = 0.001
+lv_i_over_10 = 15
 m_pid_init_5 ()
-gv_pidb = lv_pid_7
-lv_kp_7 = 3.2
-lv_kd_7 = 0.2
-lv_ki_7 = 0.003
-lv_i_over_7 = 15
+gv_pidb = lv_pid_10
+lv_kp_10 = 2.5
+lv_kd_10 = 0.05
+lv_ki_10 = 0.0005
+lv_i_over_10 = 15
 m_pid_init_5 ()
-gv_pidc = lv_pid_7
+gv_pidc = lv_pid_10
+lv_kp_10 = 0.1
+lv_kd_10 = 0.0
+lv_ki_10 = 0.0
+lv_i_over_10 = 2
+m_pid_init_5 ()
+gv_pointfollowing = lv_pid_10
 GV_COORDS_SAVE = EV3File.OpenRead ( "China/Files/Coords" )
 gv_coords = EV3File.ReadNumberArray ( gv_coords_save , 3 )
 gv_prev_move_t = 0
@@ -64,24 +83,26 @@ LCD.Clear ()
 Thread.Run = f_lcdcoords_0
 Thread.Run = f_calccoords_0
 gv_coords = Vector.Init ( 3 , 0 )
-lv_x_6 = 10
-lv_y_6 = 40
-lv_ang_6 = 1.3
-f_goin_3 ()
-f_shoot_0 ()
-lv_x_6 = 0
-lv_y_6 = 0
-lv_ang_6 = 0
+lv_x_9 = 17
+lv_y_9 = 30
+lv_ang_9 = 1.57
 f_goin_3 ()
 GV_COORDS_SAVE = EV3File.OpenWrite ( "China/Files/Coords" )
 EV3File.WriteNumberArray ( gv_coords_save , 3 , gv_coords )
+f_shoot_0 ()
+lv_x_9 = 0
+lv_y_9 = 0
+lv_ang_9 = 0
+f_goin_3 ()
+gv_threads_flag = 0
+Program.Delay ( 10000 )
 Sub f_calccoords_0
 While gv_threads_flag = 1
 gv_v = 0
 gv_w = 0
 f_dirvelocity_2 ()
-gv_v = lv_v_3
-gv_w = lv_w_3
+gv_v = lv_v_5
+gv_w = lv_w_5
 gv_coords [ 2 ] = gv_coords [ 2 ] + gv_w / 2
 gv_coords [ 0 ] = gv_coords [ 0 ] + gv_v * Math.Cos ( gv_coords [ 2 ] )
 gv_coords [ 1 ] = gv_coords [ 1 ] + gv_v * Math.Sin ( gv_coords [ 2 ] )
@@ -98,7 +119,9 @@ While gv_threads_flag = 1
 LCD.Text ( 1 , 10 , 20 , 2 , gv_coords [ 0 ] )
 LCD.Text ( 1 , 10 , 40 , 2 , gv_coords [ 1 ] )
 LCD.Text ( 1 , 10 , 60 , 2 , gv_coords [ 2 ] )
-Program.Delay ( 100 )
+LCD.Text ( 1 , 10 , 80 , 2 , gv_lcdbuf [ 0 ] )
+LCD.Text ( 1 , 10 , 100 , 2 , gv_lcdbuf [ 1 ] )
+Program.Delay ( 81 )
 EndWhile
 EndSub
 Sub f_reset_0
@@ -108,18 +131,27 @@ gv_encb_last = 0
 gv_encc_last = 0
 gv_b_pos = 0
 gv_c_pos = 0
-lv_pid_in_8 = gv_pidb
+lv_pid_in_11 = gv_pidb
 m_pid_reset_2 ()
-gv_pidb = lv_pid_8
-lv_pid_in_8 = gv_pidc
+gv_pidb = lv_pid_11
+lv_pid_in_11 = gv_pidc
 m_pid_reset_2 ()
-gv_pidc = lv_pid_8
+gv_pidc = lv_pid_11
+lv_pid_in_11 = gv_pointfollowing
+m_pid_reset_2 ()
+gv_pointfollowing = lv_pid_11
 Time.Reset1 ()
 gv_prev_move_t = Time.Get1 ()
 EndSub
 Sub f_shoot_0
 MotorAD.StartPower ( - 90 )
-Program.Delay ( 5000 )
+Program.Delay ( 300 )
+MotorAD.StartPower ( - 100 )
+Program.Delay ( 5200 )
+MotorAD.StartPower ( - 80 )
+Program.Delay ( 500 )
+MotorAD.StartPower ( - 60 )
+Program.Delay ( 300 )
 MotorAD.OffAndBrake ()
 EndSub
 Sub f_between_3
@@ -150,106 +182,144 @@ lv_ang_2 = - 1.57
 EndIf
 EndIf
 EndSub
+Sub f_ro_3
+lv_ro_3 = ( lv_a_3 [ 0 ] - lv_b_3 [ 0 ] ) * ( lv_a_3 [ 0 ] - lv_b_3 [ 0 ] ) + ( lv_a_3 [ 1 ] - lv_b_3 [ 1 ] ) * ( lv_a_3 [ 1 ] - lv_b_3 [ 1 ] )
+lv_ro_3 = Math.SquareRoot ( lv_ro_3 )
+EndSub
+Sub f_rotation_3
+lv_ra_4 = lv_a_4
+lv_cos_4 = Math.Cos ( lv_theta_4 )
+lv_sin_4 = Math.Sin ( lv_theta_4 )
+lv_ra_4 [ 0 ] = lv_cos_4 * lv_a_4 [ 0 ] - lv_sin_4 * lv_a_4 [ 1 ]
+lv_ra_4 [ 1 ] = lv_sin_4 * lv_a_4 [ 0 ] + lv_cos_4 * lv_a_4 [ 1 ]
+EndSub
 Sub f_dirvelocity_2
-lv_db_3 = 0 - MotorB.GetTacho () - gv_encb_last
-lv_dc_3 = MotorC.GetTacho () - gv_encc_last
-lv_v_3 = ( lv_db_3 + lv_dc_3 ) / 37
-lv_w_3 = ( lv_dc_3 - lv_db_3 ) / 289.5
+lv_db_5 = 0 - MotorB.GetTacho () - gv_encb_last
+lv_dc_5 = MotorC.GetTacho () - gv_encc_last
+lv_v_5 = ( lv_db_5 + lv_dc_5 ) / 37
+lv_w_5 = ( lv_dc_5 - lv_db_5 ) / 289.5
 gv_encb_last = 0 - MotorB.GetTacho ()
 gv_encc_last = MotorC.GetTacho ()
 EndSub
 Sub f_move_2
-lv_time_4 = Time.Get1 ()
-lv_dt_4 = lv_time_4 - gv_prev_move_t
-lv_v_part_4 = lv_v_4 * 37
-lv_w_part_4 = lv_w_4 * 289.5
-gv_b_pos = gv_b_pos + ( lv_v_part_4 - lv_w_part_4 ) * lv_dt_4 / 2000
-lv_pid_in_9 = gv_pidb
-lv_err_9 = gv_b_pos + MotorB.GetTacho ()
-lv_time_9 = lv_time_4
+lv_time_6 = Time.Get1 ()
+lv_dt_6 = lv_time_6 - gv_prev_move_t
+lv_v_part_6 = lv_v_6 * 37
+lv_w_part_6 = lv_w_6 * 289.5
+gv_b_pos = gv_b_pos + ( lv_v_part_6 - lv_w_part_6 ) * lv_dt_6 / 2000
+lv_pid_in_12 = gv_pidb
+lv_err_12 = gv_b_pos + MotorB.GetTacho ()
+lv_time_12 = lv_time_6
 m_pid_calc_5 ()
-gv_pidb = lv_pid_9
-lv_up_4 = lv_up_9
-MotorB.StartPower ( - lv_up_4 )
-gv_c_pos = gv_c_pos + ( lv_v_part_4 + lv_w_part_4 ) * lv_dt_4 / 2000
-lv_pid_in_9 = gv_pidc
-lv_err_9 = gv_c_pos - MotorC.GetTacho ()
-lv_time_9 = lv_time_4
+gv_pidb = lv_pid_12
+lv_up_6 = lv_up_12
+MotorB.StartPower ( - lv_up_6 )
+gv_c_pos = gv_c_pos + ( lv_v_part_6 + lv_w_part_6 ) * lv_dt_6 / 2000
+lv_pid_in_12 = gv_pidc
+lv_err_12 = gv_c_pos - MotorC.GetTacho ()
+lv_time_12 = lv_time_6
 m_pid_calc_5 ()
-gv_pidc = lv_pid_9
-lv_up_4 = lv_up_9
-MotorC.StartPower ( lv_up_4 )
-gv_prev_move_t = lv_time_4
+gv_pidc = lv_pid_12
+lv_up_6 = lv_up_12
+MotorC.StartPower ( lv_up_6 )
+gv_prev_move_t = lv_time_6
 EndSub
 Sub f_rotin_1
-lv_bet_5 = 0
+lv_bet_7 = 0
 While "True"
 lv_ang1_1 = gv_coords [ 2 ]
-lv_ang2_1 = lv_ang_5
+lv_ang2_1 = lv_ang_7
 f_between_3 ()
-lv_bet_5 = lv_theta_1
-If lv_bet_5 > 0.02 Then
-lv_v_4 = 0
-lv_w_4 = 1.5
+lv_bet_7 = lv_theta_1
+If lv_bet_7 > 0.01 Then
+lv_v_6 = 0
+lv_w_6 = 1.2
 f_move_2 ()
-ElseIf lv_bet_5 < - 0.02 Then
-lv_v_4 = 0
-lv_w_4 = - 1.5
+ElseIf lv_bet_7 < - 0.01 Then
+lv_v_6 = 0
+lv_w_6 = - 1.2
 f_move_2 ()
 Else
-Goto ll_endrot_5
+Goto ll_endrot_7
 EndIf
 Program.Delay ( 2 )
 EndWhile
-ll_endrot_5:
+ll_endrot_7:
 MotorBC.OffAndBrake ()
 EndSub
 Sub f_goin_3
-lv_dx_2 = ( lv_x_6 - gv_coords [ 0 ] )
-lv_dy_2 = ( lv_y_6 - gv_coords [ 1 ] )
+lv_dx_2 = ( lv_x_9 - gv_coords [ 0 ] )
+lv_dy_2 = ( lv_y_9 - gv_coords [ 1 ] )
 f_atan2_3 ()
-lv_dir_6 = lv_ang_2
-LCD.Text ( 1 , 10 , 80 , 2 , lv_dir_6 )
+lv_dir_9 = lv_ang_2
 f_reset_0 ()
-lv_ang_5 = lv_dir_6
+lv_ang_7 = lv_dir_9
 f_rotin_1 ()
-Program.Delay ( 100 )
-lv_len_6 = Math.SquareRoot ( ( lv_x_6 - gv_coords [ 0 ] ) * ( lv_x_6 - gv_coords [ 0 ] ) + ( lv_y_6 - gv_coords [ 1 ] ) * ( lv_y_6 - gv_coords [ 1 ] ) ) * 18.5
+Program.Delay ( 50 )
+lv_trg_9 = Vector.Init ( 3 , 0 )
+lv_trg_9 [ 0 ] = lv_x_9 - gv_coords [ 0 ]
+lv_trg_9 [ 1 ] = lv_y_9 - gv_coords [ 1 ]
+lv_ro_9 = 0
+lv_w_9 = 0
+lv_zeros_9 = Vector.Init ( 3 , 0 )
+lv_a_3 = lv_zeros_9
+lv_b_3 = lv_trg_9
+f_ro_3 ()
+lv_r_9 = lv_ro_3
 f_reset_0 ()
-While MotorC.GetTacho () < lv_len_6
-lv_v_4 = 15
-lv_w_4 = 0
+While lv_r_9 > 0.25
+lv_trg_9 [ 0 ] = lv_x_9 - gv_coords [ 0 ]
+lv_trg_9 [ 1 ] = lv_y_9 - gv_coords [ 1 ]
+lv_a_4 = lv_trg_9
+lv_theta_4 = 0 - gv_coords [ 2 ]
+f_rotation_3 ()
+lv_rottrg_9 = lv_ra_4
+lv_pid_in_12 = gv_pointfollowing
+lv_err_12 = lv_rottrg_9 [ 1 ]
+lv_time_12 = Time.Get1 ()
+m_pid_calc_5 ()
+gv_pointfollowing = lv_pid_12
+lv_w_9 = lv_up_12
+gv_lcdbuf [ 0 ] = lv_w_9
+gv_lcdbuf [ 1 ] = lv_r_9
+lv_v_6 = 13
+lv_w_6 = lv_w_9
 f_move_2 ()
 Program.Delay ( 3 )
+lv_a_3 = lv_zeros_9
+lv_b_3 = lv_trg_9
+f_ro_3 ()
+lv_r_9 = lv_ro_3
 EndWhile
 MotorBC.OffAndBrake ()
 f_reset_0 ()
-lv_ang_5 = lv_ang_6
+lv_ang_7 = lv_ang_9
 f_rotin_1 ()
 EndSub
 Sub m_pid_init_5
-lv_pid_7 = Vector.Init ( 7 , 0 )
-lv_pid_7 [ 1 ] = lv_kp_7
-lv_pid_7 [ 2 ] = lv_kd_7
-lv_pid_7 [ 3 ] = lv_ki_7
-lv_pid_7 [ 4 ] = lv_i_over_7
+lv_pid_10 = Vector.Init ( 7 , 0 )
+lv_pid_10 [ 1 ] = lv_kp_10
+lv_pid_10 [ 2 ] = lv_kd_10
+lv_pid_10 [ 3 ] = lv_ki_10
+lv_pid_10 [ 4 ] = lv_i_over_10
 EndSub
 Sub m_pid_reset_2
-lv_pid_8 = lv_pid_in_8
-lv_pid_8 [ 5 ] = 0
-lv_pid_8 [ 6 ] = 0
+lv_pid_11 = lv_pid_in_11
+lv_pid_11 [ 5 ] = 0
+lv_pid_11 [ 6 ] = 0
+lv_pid_11 [ 7 ] = 0
 EndSub
 Sub m_pid_calc_5
-lv_pid_9 = lv_pid_in_9
-lv_dt_9 = lv_time_9 - lv_pid_9 [ 7 ]
-lv_pid_9 [ 7 ] = lv_time_9
-lv_pid_9 [ 6 ] = lv_pid_9 [ 6 ] + lv_err_9 * lv_pid_9 [ 3 ] * lv_dt_9
-If lv_pid_9 [ 6 ] > lv_pid_9 [ 4 ] Then
-lv_pid_9 [ 6 ] = lv_pid_9 [ 4 ]
-ElseIf lv_pid_9 [ 6 ] < - lv_pid_9 [ 4 ] Then
-lv_pid_9 [ 6 ] = - lv_pid_9 [ 4 ]
+lv_pid_12 = lv_pid_in_12
+lv_dt_12 = lv_time_12 - lv_pid_12 [ 7 ]
+lv_pid_12 [ 7 ] = lv_time_12
+lv_pid_12 [ 6 ] = lv_pid_12 [ 6 ] + lv_err_12 * lv_pid_12 [ 3 ] * lv_dt_12
+If lv_pid_12 [ 6 ] > lv_pid_12 [ 4 ] Then
+lv_pid_12 [ 6 ] = lv_pid_12 [ 4 ]
+ElseIf lv_pid_12 [ 6 ] < - lv_pid_12 [ 4 ] Then
+lv_pid_12 [ 6 ] = - lv_pid_12 [ 4 ]
 EndIf
-lv_pid_9 [ 0 ] = lv_err_9 * lv_pid_9 [ 1 ] + ( lv_err_9 - lv_pid_9 [ 5 ] ) * lv_pid_9 [ 2 ] * lv_dt_9 + lv_pid_9 [ 6 ]
-lv_up_9 = lv_pid_9 [ 0 ]
-lv_pid_9 [ 5 ] = lv_err_9
+lv_pid_12 [ 0 ] = lv_err_12 * lv_pid_12 [ 1 ] + ( lv_err_12 - lv_pid_12 [ 5 ] ) * lv_pid_12 [ 2 ] * lv_dt_12 + lv_pid_12 [ 6 ]
+lv_up_12 = lv_pid_12 [ 0 ]
+lv_pid_12 [ 5 ] = lv_err_12
 EndSub

@@ -6,8 +6,10 @@ import "PID"
 
 threads_flag=1
 
-PID.Init(3.2,0.2,0.003,15,pidB)
-PID.Init(3.2,0.2,0.003,15,pidC)
+PID.Init(3.1,0.1,0.001,15,pidB)
+PID.Init(2.5,0.05,0.0005,15,pidC)
+
+PID.Init(0.1,0.0,0.0,2,pointfollowing)
 
 coords_save=EV3File.OpenRead("Coords")
 coords=EV3File.ReadNumberArray(coords_save,3)
@@ -24,10 +26,10 @@ Sub reset
   C_pos=0
   PID.Reset(pidB,pidB)
   PID.Reset(pidC,pidC)
+  PID.Reset(pointfollowing,pointfollowing)
   Time.Reset1()
   prev_move_t=Time.Get1()
 EndSub
-
 
 Function move(in number V, in number w) '[V]-cm/s [w]-rad/s
   time=Time.Get1()
@@ -48,10 +50,10 @@ Function RotIn(in number ang)
   While "True"
     between(@coords[2], ang,bet)
     'move(0,bet*2)
-    If bet>0.02 Then
-      move(0,1.5)
-    ElseIf bet<-0.02 Then
-      move(0,-1.5)
+    If bet>0.01 Then
+      move(0,1.2)
+    ElseIf bet<-0.01 Then
+      move(0,-1.2)
     Else
       Goto endROT
     EndIf
@@ -61,14 +63,11 @@ Function RotIn(in number ang)
   MotorBC.OffAndBrake()
 EndFunction
 
-Function GoIn(in number x, in number y, in number ang)
+Function GoInStrait(in number x, in number y, in number ang)
   atan2((x-@coords[0]), (y-@coords[1]),dir)
-  'between(@coords[2],dir,ddir)
-  LCD.Text(1,10,80,2,dir)
- 
   reset()
   RotIn(dir)
-  Program.Delay(100)
+  Program.Delay(50)
   len=Math.SquareRoot((x-@coords[0])*(x-@coords[0])+(y-@coords[1])*(y-@coords[1]))*18.5
   reset()
   While MotorC.GetTacho()<len
@@ -76,15 +75,52 @@ Function GoIn(in number x, in number y, in number ang)
     Program.Delay(3)
   EndWhile
   MotorBC.OffAndBrake()
- 
-  ''between(dir,ang,ddir)
+  reset()
+  RotIn(ang)
+EndFunction
+
+Function GoIn(in number x, in number y, in number ang)
+  atan2((x-@coords[0]), (y-@coords[1]),dir)
+  
+  reset()
+  RotIn(dir)
+  Program.Delay(50)
+  
+  trg=Vector.Init(3,0)
+  trg[0]=x-@coords[0]
+  trg[1]=y-@coords[1]
+  ro=0
+  w=0
+  zeros=Vector.Init(3,0)
+  ro(zeros,trg,R)
+  reset()
+  'MotorBC.StartPower(0)
+  While R>0.25
+    trg[0]=x-@coords[0]
+    trg[1]=y-@coords[1]
+    Rotation(trg,0-@coords[2],rottrg)
+    PID.Calc(@pointfollowing,rottrg[1],Time.Get1(),@pointfollowing, w)
+    @LCDbuf[0]=w
+    @LCDbuf[1]=R
+    move(13,w)
+    Program.Delay(3)
+    ro(zeros,trg,R)
+  EndWhile
+  MotorBC.OffAndBrake()
+  
   reset()
   RotIn(ang)
 EndFunction
 
 Sub Shoot
   MotorAD.StartPower(-90)
-  Program.Delay(5000)
+  Program.Delay(300)
+  MotorAD.StartPower(-100)
+  Program.Delay(5200)
+  MotorAD.StartPower(-80)
+  Program.Delay(500)
+  MotorAD.StartPower(-60)
+  Program.Delay(300)
   MotorAD.OffAndBrake()
 EndSub
 
@@ -93,14 +129,15 @@ Thread.Run=LCDcoords
 Thread.Run=CALCcoords
 
 coords=Vector.Init(3,0)
-'RotOn(1.3)
-GoIn(10,40,1.3)
-'Program.Delay(8000)
+
+'GoIn(100,0,0)
+''RotOn(1.3)
+GoIn(17,30,1.57)
+'Program.Delay(12000)
+coords_save=EV3File.OpenWrite("Coords")
+EV3File.WriteNumberArray(coords_save,3,coords)
 Shoot()
 GoIn(0,0,0)
 'MotorBC.OffAndBrake()
-'threads_flag=0
-'Program.Delay(2000)
-
-coords_save=EV3File.OpenWrite("Coords")
-EV3File.WriteNumberArray(coords_save,3,coords)
+threads_flag=0
+Program.Delay(10000)
